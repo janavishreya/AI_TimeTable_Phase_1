@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate Timetable</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, #4facfe, #00f2fe);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden; /* Prevent scrolling during animation */
+        }
+
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 600px; /* Increased width */
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        form {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        label {
+            width: 45%; /* Two labels per row */
+            text-align: left;
+            font-size: 1rem;
+            margin-top: 10px;
+        }
+
+        input {
+            width: 45%; /* Align inputs with labels */
+            padding: 8px;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            outline: none;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        input:focus {
+            border-color: #007BFF;
+            box-shadow: 0px 0px 5px rgba(0, 123, 255, 0.5);
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            border: none;
+            background-color: #007BFF;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 1rem;
+            width: 50%;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            align-items: center;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center
+        }
+
+        button:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        /* Animation Styles */
+        .slide-left {
+            animation: slideLeft 0.8s forwards;
+        }
+
+        @keyframes slideLeft {
+            from {
+                transform: translateX(0);
+            }
+            to {
+                transform: translateX(-100%);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="form-container">
+        <h1>Generate Your Timetable</h1>
+        <form id="timetable-form" action="{{ url_for('generate_timetable_route') }}" method="POST">
+            <label for="subjects">Subjects:</label>
+            <input type="text" name="subjects" id="subjects" required>
+        
+            <label for="labs">Labs:</label>
+            <input type="text" name="labs" id="labs">
+        
+            <label for="total_periods">Total Periods:</label>
+            <input type="number" name="total_periods" id="total_periods" required>
+        
+            <label for="total_days">Total Days:</label>
+            <input type="number" name="total_days" id="total_days" required>
+        
+            <label for="lab_days">Lab Days:</label>
+            <input type="text" name="lab_days" id="lab_days">
+        
+            <label for="break_times">Break Times:</label>
+            <input type="text" name="break_times" id="break_times">
+        
+            <label for="period_duration">Period Duration:</label>
+            <input type="number" name="period_duration" id="period_duration" required>
+        
+            <label for="start_time">Start Time:</label>
+            <input type="text" name="start_time" id="start_time" required>
+        
+            <label for="end_time">End Time:</label>
+            <input type="text" name="end_time" id="end_time" required>
+        
+            <button type="submit" id="generate-button">Generate</button>
+        </form>
+    </div>
+
+    <script>
+        // Add slide animation on form submission
+        const form = document.getElementById('timetable-form');
+        const container = document.getElementById('form-container');
+
+        form.addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent form from submitting immediately
+            container.classList.add('slide-left');
+            setTimeout(() => {
+                form.submit(); // Submit the form after animation
+            }, 800); // Match the animation duration
+        });
+    </script>
+</body>
+</html>

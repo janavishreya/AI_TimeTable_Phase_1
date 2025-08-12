@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timetable History</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+         .title-container {
+        border: 2px solid black; /* Black border */
+        padding: 10px;
+        display: inline-block;
+        margin-top: 20px;
+    }
+        .container {
+            text-align: center;
+            margin: auto;
+            width: 35%;
+            border: 1px solid black;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+
+        }
+        .timetable-list {
+            list-style-type: none;
+            padding: 0;
+            border: 1px  black;
+            display: inline-block;
+            text-align: center;
+        }
+        .timetable-list li {
+            margin: 10px 0;
+        }
+        .timetable-list a {
+            text-decoration: none;
+            color: blue;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            display: none; /* Initially hidden */
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Timetable History</h1>
+        <ul class="timetable-list">
+            {% for timetable in timetables %}
+                <li>
+                    <a onclick="loadTimetable({{ timetable.id }})">{{ timetable.title }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+
+        <h2 id="timetable-title"></h2>
+        <table id="timetable-table">
+            <thead>
+                <tr>
+                    <th>Days</th>
+                    <th>8:40 AM - 9:30 AM</th>
+                    <th>9:30 AM - 10:20 AM</th>
+                    <th>10:30 AM - 11:20 AM</th>
+                    <th>11:20 AM - 12:10 PM</th>
+                    <th>12:50 PM - 1:35 PM</th>
+                    <th>1:35 PM - 2:20 PM</th>
+                    <th>2:30 PM - 3:15 PM</th>
+                    <th>3:15 PM - 4:00 PM</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <script>
+        function loadTimetable(id) {
+            fetch(`/get_timetable/${id}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById("timetable-table").style.display = "table";
+                        const tbody = document.querySelector("#timetable-table tbody");
+                        tbody.innerHTML = "";  // Clear existing content
+
+                        for (const [day, periods] of Object.entries(data.timetable)) {
+                            let row = `<tr><td>${day}</td>`;
+                            periods.forEach(period => {
+                                row += `<td>${period}</td>`;
+                            });
+                            row += `</tr>`;
+                            tbody.innerHTML += row;
+                        }
+                    }
+                });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generated Timetable</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .container {
+            text-align: center;
+            margin: auto;
+            width: 80%;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 10px;
+            text-align: center;
+        }
+        .btn {
+            background-color: blue;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin-top: 20px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .btn:hover {
+            background-color: darkblue;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Generated Timetable</h1>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th rowspan="2">Days</th>
+                    <th colspan="4">Morning Sessions</th>
+                    <th>Lunch Break</th>
+                    <th colspan="4">Afternoon Sessions</th>
+                </tr>
+                <tr>
+                    <th>8:40 AM - 9:30 AM</th>
+                    <th>9:30 AM - 10:20 AM</th>
+                    <th>10:30 AM - 11:20 AM</th>
+                    <th>11:20 AM - 12:10 PM</th>
+                    <th>12:10 PM - 12:50 PM</th>
+                    <th>12:50 PM - 1:35 PM</th>
+                    <th>1:35 PM - 2:20 PM</th>
+                    <th>2:30 PM - 3:15 PM</th>
+                    <th>3:15 PM - 4:00 PM</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for day, periods in timetable.items() %}
+                    <tr>
+                        <td>{{ day }}</td>
+                        {% for i in range(0, 4) %}
+                            <td>{{ periods[i] }}</td>
+                        {% endfor %}
+                        <td><strong>Lunch Break</strong></td> <!-- Lunch Break Column -->
+                        {% for i in range(4, 8) %}
+                            <td>{{ periods[i] }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Save Button -->
+        <button class="btn" onclick="saveTimetable()">Save Timetable</button>
+    </div>
+
+    <script>
+        function saveTimetable() {
+            let timetableTitle = prompt("Enter a title for the timetable:");
+
+            // Prevent saving if no title is entered
+            if (!timetableTitle || timetableTitle.trim() === "") {
+                alert("Timetable title is required.");
+                return;
+            }
+
+            let timetableData = {{ timetable | tojson }};
+
+            fetch('/save_timetable', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    timetable_title: timetableTitle.trim(),
+                    timetable_data: JSON.stringify(timetableData) // Convert to JSON string
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert("Timetable saved successfully!");
+                } else {
+                    alert("Error saving timetable: " + data.error);
+                }
+            })
+            .catch(error => {
+                alert("Failed to save timetable. Try again!");
+                console.error(error);
+            });
+        }
+    </script>
+</body>
+</html>

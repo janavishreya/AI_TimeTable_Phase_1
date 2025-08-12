@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Generated Timetable</title>
+</head>
+<body>
+    <h1>Your Generated Timetable</h1>
+    
+    <table border="1">
+        <tr>
+            <th>Day</th>
+            <th>Periods</th>
+        </tr>
+        {% for day, periods in timetable[0].items() %}
+        <tr>
+            <td>{{ day }}</td>
+            <td>{{ periods | join(', ') }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <br>
+    <a href="{{ url_for('generate_timetable_page') }}">Generate Another Timetable</a><br>
+    <a href="{{ url_for('dashboard') }}">Back to Dashboard</a>
+</body>
+</html>

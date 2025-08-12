@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="dashboard-container">
+        <h1>Welcome  {{ logged_in_user }}</h1>
+        
+        <div class="card-container">
+            <a href="{{ url_for('generate_timetable_route') }}" class="card">Generate Timetable</a>
+            <a href="{{ url_for('page5') }}" class="card">Profile</a>
+            <a href="{{ url_for('page6') }}" class="card">History</a>
+        </div>
+
+        <a href="{{ url_for('logout') }}" class="logout-button">Logout</a>
+    </div>
+</body>
+</html>
